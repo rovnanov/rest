@@ -1,0 +1,100 @@
+package com.learnup.tests.product;
+
+import com.learnup.dto.Product;
+import com.learnup.tests.BaseTest;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.http.ContentType;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static com.learnup.Endpoints.POST_PRODUCT_ENDPOINT;
+import static com.learnup.Endpoints.PRODUCT_ID_ENDPOINT;
+import static com.learnup.enums.CategoryType.FOOD;
+import static com.learnup.enums.ProductType.BLACKBERRIES;
+import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.requestSpecification;
+import static java.util.function.Predicate.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.nullValue;
+
+public class PutTest extends BaseTest {
+    Product product;
+    Integer id;
+
+    RequestSpecification postProductRequestSpec;
+    ResponseSpecification postProductResponseSpec;
+
+    @BeforeEach
+    void setUp(){
+        product = Product.builder()
+                .id(BLACKBERRIES.getId())
+                .price(150)
+                .title(BLACKBERRIES.getTitle())
+                .categoryTitle(BLACKBERRIES.getCategory())
+                .build();
+        postProductRequestSpec = new RequestSpecBuilder()
+                .setBody(product)
+                .setContentType(ContentType.JSON)
+                .build();
+        postProductResponseSpec = new ResponseSpecBuilder()
+                .expectStatusCode(200)
+                .expectStatusLine("HTTP/1.1 200 ")
+                .expectBody("title", equalTo(product.getTitle()))
+                .expectBody("price", equalTo(product.getPrice()))
+                .expectBody("categoryTitle", equalTo(product.getCategoryTitle()))
+                .build();
+    }
+    @Test
+    void putNewParametersTest(){
+        Product response = given(postProductRequestSpec, postProductResponseSpec)
+                .put(POST_PRODUCT_ENDPOINT)
+                .prettyPeek()
+                .body()
+                .as(Product.class);
+        id = response.getId();
+        assertThat(id, Matchers.is(Matchers.not(nullValue())));
+        assertThat(response.getTitle(), equalTo(product.getTitle()));
+        assertThat(response.getPrice(), equalTo(product.getPrice()));
+        assertThat(response.getCategoryTitle(), equalTo(product.getCategoryTitle()));
+    }
+    @Test
+    void putNullTitlesTest(){
+        product = Product.builder()
+                .id(BLACKBERRIES.getId())
+                .price(10)
+                .title(null)
+                .categoryTitle(BLACKBERRIES.getCategory())
+                .build();
+        postProductResponseSpec = new ResponseSpecBuilder()
+                .expectStatusCode(400)
+                .build();
+        postProductRequestSpec = new RequestSpecBuilder()
+                .setBody(product)
+                .setContentType(ContentType.JSON)
+                .build();
+
+        Product response = given(postProductRequestSpec, postProductResponseSpec)
+                .put(POST_PRODUCT_ENDPOINT)
+                .prettyPeek()
+                .body()
+                .as(Product.class);
+        id = response.getId();
+        assertThat(id, Matchers.is(Matchers.not(nullValue())));
+        assertThat(response.getTitle(), equalTo(product.getTitle()));
+        assertThat(response.getPrice(), equalTo(product.getPrice()));
+        assertThat(response.getCategoryTitle(), equalTo(product.getCategoryTitle()));
+    }
+    @AfterEach
+    void check(){
+        given()
+                .when()
+                .get(PRODUCT_ID_ENDPOINT, id)
+                .prettyPeek();
+    }
+}
