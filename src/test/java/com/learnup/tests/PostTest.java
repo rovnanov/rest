@@ -155,7 +155,7 @@ public class PostTest {
                 .get("id");
     }
 
-    @AfterEach
+//    @AfterEach
     void tearDown() {
         when()
                 .delete("http://80.78.248.82:8189/market/api/v1/products/{id}", id)
