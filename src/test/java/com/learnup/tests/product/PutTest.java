@@ -12,6 +12,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static com.learnup.asserts.CommonAsserts.putProductTest;
 import static com.learnup.Endpoints.POST_PRODUCT_ENDPOINT;
 import static com.learnup.Endpoints.PRODUCT_ID_ENDPOINT;
 import static com.learnup.enums.CategoryType.FOOD;
@@ -31,7 +32,7 @@ public class PutTest extends BaseTest {
     ResponseSpecification postProductResponseSpec;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         product = Product.builder()
                 .id(BLACKBERRIES.getId())
                 .price(150)
@@ -50,21 +51,19 @@ public class PutTest extends BaseTest {
                 .expectBody("categoryTitle", equalTo(product.getCategoryTitle()))
                 .build();
     }
+
     @Test
-    void putNewParametersTest(){
+    void putNewParametersTest() {
         Product response = given(postProductRequestSpec, postProductResponseSpec)
                 .put(POST_PRODUCT_ENDPOINT)
                 .prettyPeek()
                 .body()
                 .as(Product.class);
-        id = response.getId();
-        assertThat(id, Matchers.is(Matchers.not(nullValue())));
-        assertThat(response.getTitle(), equalTo(product.getTitle()));
-        assertThat(response.getPrice(), equalTo(product.getPrice()));
-        assertThat(response.getCategoryTitle(), equalTo(product.getCategoryTitle()));
+        id = putProductTest(response, product);
     }
+
     @Test
-    void putNullTitlesTest(){
+    void putNullTitlesTest() {
         product = Product.builder()
                 .id(BLACKBERRIES.getId())
                 .price(10)
@@ -84,14 +83,12 @@ public class PutTest extends BaseTest {
                 .prettyPeek()
                 .body()
                 .as(Product.class);
-        id = response.getId();
-        assertThat(id, Matchers.is(Matchers.not(nullValue())));
-        assertThat(response.getTitle(), equalTo(product.getTitle()));
-        assertThat(response.getPrice(), equalTo(product.getPrice()));
-        assertThat(response.getCategoryTitle(), equalTo(product.getCategoryTitle()));
+
+        id = putProductTest(response, product);
     }
+
     @AfterEach
-    void check(){
+    void check() {
         given()
                 .when()
                 .get(PRODUCT_ID_ENDPOINT, id)

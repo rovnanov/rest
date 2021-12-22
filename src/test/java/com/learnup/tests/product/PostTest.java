@@ -13,6 +13,9 @@ import com.learnup.dto.Product;
 
 import java.util.Properties;
 
+import static com.learnup.asserts.CommonAsserts.postProductTest;
+
+import static com.learnup.asserts.CommonAsserts.postProductPositiveAssert;
 import static com.learnup.Endpoints.POST_PRODUCT_ENDPOINT;
 import static com.learnup.Endpoints.PRODUCT_ID_ENDPOINT;
 import static com.learnup.enums.CategoryType.FOOD;
@@ -62,11 +65,7 @@ public class PostTest extends BaseTest {
                 .prettyPeek()
                 .body()
                 .as(Product.class);
-        id = response.getId();
-        assertThat(id, is(not(nullValue())));
-        assertThat(response.getTitle(), equalTo(product.getTitle()));
-        assertThat(response.getPrice(), equalTo(product.getPrice()));
-        assertThat(response.getCategoryTitle(), equalTo(product.getCategoryTitle()));
+        id = postProductTest(response, product);
     }
 
     @Test
@@ -84,10 +83,9 @@ public class PostTest extends BaseTest {
                 .prettyPeek()
                 .body()
                 .as(Product.class);
-        id = response.getId();
-        assertThat(id, is(not(nullValue())));
-        assertThat(response.getTitle(), equalTo(product.getTitle()));
+        id = postProductTest(response, nulltitleproduct);
     }
+
     @Test
     void postProductWithEmptyTitleTest() {
         product = Product.builder()
@@ -108,10 +106,9 @@ public class PostTest extends BaseTest {
                 .prettyPeek()
                 .body()
                 .as(Product.class);
-        id = response.getId();
-        assertThat(id, is(not(nullValue())));
-        assertThat(response.getTitle(), equalTo(product.getTitle()));
+        id = postProductTest(response, product);
     }
+
     @Test
     void postProductWithSpecialSymbolsInTitleTest() {
         product = Product.builder()
@@ -132,9 +129,8 @@ public class PostTest extends BaseTest {
                 .prettyPeek()
                 .body()
                 .as(Product.class);
-        id = response.getId();
-        assertThat(id, is(not(nullValue())));
-        assertThat(response.getTitle(), equalTo(product.getTitle()));
+
+        id = postProductTest(response, product);
     }
 
     @Test
@@ -157,10 +153,10 @@ public class PostTest extends BaseTest {
                 .prettyPeek()
                 .body()
                 .as(Product.class);
-        id = response.getId();
-        assertThat(id, is(not(nullValue())));
-        assertThat(response.getTitle(), equalTo(product.getTitle()));
+
+        id = postProductTest(response, product);
     }
+
     @Test
     void postProductWithNegativePriceTest() {
         product = Product.builder()
@@ -181,10 +177,10 @@ public class PostTest extends BaseTest {
                 .prettyPeek()
                 .body()
                 .as(Product.class);
-        id = response.getId();
-        assertThat(id, is(not(nullValue())));
-        assertThat(response.getTitle(), equalTo(product.getTitle()));
+
+        id = postProductTest(response, product);
     }
+
     @Test
     void postProductWithNullPriceTest() {
         product = Product.builder()
@@ -205,10 +201,9 @@ public class PostTest extends BaseTest {
                 .prettyPeek()
                 .body()
                 .as(Product.class);
-        id = response.getId();
-        assertThat(id, is(not(nullValue())));
-        assertThat(response.getTitle(), equalTo(product.getTitle()));
+        id = postProductTest(response, product);
     }
+
     @Test
     void postProductWithLongPriceTest() {
         product = Product.builder()
@@ -229,11 +224,11 @@ public class PostTest extends BaseTest {
                 .prettyPeek()
                 .body()
                 .as(Product.class);
-        id = response.getId();
-        assertThat(id, is(not(nullValue())));
-        assertThat(response.getTitle(), equalTo(product.getTitle()));
+
+        id = postProductTest(response, product);
     }
-    //@AfterEach
+
+    @AfterEach
     void tearDown() {
         given()
                 .response()
