@@ -3,6 +3,7 @@ package com.learnup.tests.product;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Food;
 import com.learnup.tests.BaseTest;
+import io.qameta.allure.*;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
@@ -25,7 +26,11 @@ import static io.restassured.RestAssured.when;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+@Epic("Product tests")
+@Story("Product POST tests")
+@Severity(SeverityLevel.NORMAL)
 public class PostTest extends BaseTest {
+
     Faker faker = new Faker();
     Product product;
     Product nulltitleproduct;
@@ -59,6 +64,7 @@ public class PostTest extends BaseTest {
     }
 
     @Test
+    @Description("POST product TEST")
     void postProductPositiveTest() {
         Product response = given(postProductRequestSpec, postProductResponseSpec)
                 .post(POST_PRODUCT_ENDPOINT)
@@ -69,6 +75,7 @@ public class PostTest extends BaseTest {
     }
 
     @Test
+    @Description("POST product with NULL title TEST")
     void postProductWithNullTitleTest() {
         postProductResponseSpec = new ResponseSpecBuilder()
                 .expectStatusCode(400)
@@ -87,6 +94,7 @@ public class PostTest extends BaseTest {
     }
 
     @Test
+    @Description("POST product with EMPTY title TEST")
     void postProductWithEmptyTitleTest() {
         product = Product.builder()
                 .price(5)
@@ -110,6 +118,8 @@ public class PostTest extends BaseTest {
     }
 
     @Test
+
+    @Description("POST product with SPECIAL SYMBOLS TEST")
     void postProductWithSpecialSymbolsInTitleTest() {
         product = Product.builder()
                 .price(faker.number().randomDigitNotZero())
@@ -134,6 +144,7 @@ public class PostTest extends BaseTest {
     }
 
     @Test
+    @Description("POST product with LONG title TEST")
     void postProductWithLongTitleTest() {
         product = Product.builder()
                 .price(faker.number().randomDigitNotZero())
@@ -158,6 +169,7 @@ public class PostTest extends BaseTest {
     }
 
     @Test
+    @Description("POST product with NEGATIVE value TEST")
     void postProductWithNegativePriceTest() {
         product = Product.builder()
                 .price(-100)
@@ -182,6 +194,7 @@ public class PostTest extends BaseTest {
     }
 
     @Test
+    @Description("POST product with NULL price TEST")
     void postProductWithNullPriceTest() {
         product = Product.builder()
                 .price(null)
@@ -205,6 +218,7 @@ public class PostTest extends BaseTest {
     }
 
     @Test
+    @Description("POST product with LONG price TEST")
     void postProductWithLongPriceTest() {
         product = Product.builder()
                 .price(999999999)
@@ -229,6 +243,7 @@ public class PostTest extends BaseTest {
     }
 
     @AfterEach
+    @Step("DELETE POSTED PRODUCT")
     void tearDown() {
         given()
                 .response()

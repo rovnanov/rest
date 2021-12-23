@@ -2,6 +2,7 @@ package com.learnup.tests.product;
 
 import com.learnup.dto.Product;
 import com.learnup.tests.BaseTest;
+import io.qameta.allure.*;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
@@ -23,6 +24,10 @@ import static java.util.function.Predicate.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
+
+@Epic("Product tests")
+@Story("Product PUT tests")
+@Severity(SeverityLevel.NORMAL)
 
 public class PutTest extends BaseTest {
     Product product;
@@ -53,6 +58,7 @@ public class PutTest extends BaseTest {
     }
 
     @Test
+    @Description("PUT positive TEST")
     void putNewParametersTest() {
         Product response = given(postProductRequestSpec, postProductResponseSpec)
                 .put(POST_PRODUCT_ENDPOINT)
@@ -63,6 +69,7 @@ public class PutTest extends BaseTest {
     }
 
     @Test
+    @Description("PUT NULL title TEST")
     void putNullTitlesTest() {
         product = Product.builder()
                 .id(BLACKBERRIES.getId())
@@ -88,6 +95,7 @@ public class PutTest extends BaseTest {
     }
 
     @AfterEach
+    @Step("CHECK product VALUES")
     void check() {
         given()
                 .when()

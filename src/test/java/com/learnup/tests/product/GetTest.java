@@ -2,6 +2,7 @@ package com.learnup.tests.product;
 
 import com.learnup.dto.Product;
 import com.learnup.tests.BaseTest;
+import io.qameta.allure.*;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -20,9 +21,12 @@ import static io.restassured.RestAssured.when;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static com.learnup.dto.Product.builder;
-
+@Epic("Product tests")
+@Story("Product GET tests")
+@Severity(SeverityLevel.NORMAL)
 public class GetTest extends BaseTest {
     @Test
+    @Description("GET product TEST")
     void positiveGetOrange() {
         Product response = given()
                 .when()
