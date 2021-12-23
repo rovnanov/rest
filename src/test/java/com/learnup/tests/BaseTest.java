@@ -1,5 +1,6 @@
 package com.learnup.tests;
 
+import com.google.common.collect.ImmutableMap;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
@@ -12,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 
+import static com.github.automatedowl.tools.AllureEnvironmentWriter.allureEnvironmentWriter;
 import static io.restassured.filter.log.LogDetail.BODY;
 import static io.restassured.filter.log.LogDetail.HEADERS;
 import static io.restassured.filter.log.LogDetail.METHOD;
@@ -30,6 +32,8 @@ public abstract class BaseTest {
         properties.load(new FileInputStream("src/test/resources/application.properties"));
         RestAssured.baseURI = properties.getProperty("baseURL");
 
+
+        setAllureEnvironment();
         logRequestSpecification = new RequestSpecBuilder()
                 .log(METHOD)
                 .log(URI)
@@ -51,5 +55,11 @@ public abstract class BaseTest {
                 .build();
         RestAssured.requestSpecification = logRequestSpecification;
         RestAssured.responseSpecification = responseSpecification;
+    }
+    public static void setAllureEnvironment(){
+        allureEnvironmentWriter(
+                ImmutableMap.<String, String>builder()
+                        .put("URL", properties.getProperty("baseURL"))
+                        .build());
     }
 }
